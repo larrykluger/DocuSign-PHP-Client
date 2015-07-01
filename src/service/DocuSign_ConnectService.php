@@ -105,6 +105,33 @@ class DocuSign_ConnectResource extends DocuSign_Resource {
 		# soapNamespace, # string	Soap method namespace. Required if useSoapInterface is true.
 		# useSoapInterface, # boolean	Set to true if the urlToPublishTo is a SOAP endpoint
 		# userIds # array list of user Id's. Required if allUsers is false
+		#
+		# RETURNS
+		# stdClass Object
+		#	(
+		#		[connectId] => 
+		#		[configurationType] => false
+		#		[urlToPublishTo] => http:foo.com
+		#		[name] => Test Connect
+		#		[allowEnvelopePublish] => false
+		#		[enableLog] => false
+		#		[includeDocuments] => false
+		#		[includeCertificateOfCompletion] => false
+		#		[requiresAcknowledgement] => false
+		#		[signMessageWithX509Certificate] => false
+		#		[useSoapInterface] => false
+		#		[includeTimeZoneInformation] => false
+		#		[includeEnvelopeVoidReason] => false
+		#		[includeSenderAccountasCustomField] => false
+		#		[envelopeEvents] =>
+		#		[recipientEvents] =>
+		#		[userIds] =>
+		#		[soapNamespace] =>
+		#		[allUsers] => false
+		#		[includeCertSoapHeader] => false
+		#		[includeDocumentFields] => false
+		#	)
+		
 
 		$this->setURL('/accounts/' . $accountId . '/connect');
 

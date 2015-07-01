@@ -30,9 +30,11 @@ assert (is_array($connects->configurations));
 assert (count($connects->configurations) == $connects->totalRecords);
 $initial_connect_records = $connects->totalRecords;
 
+$urlToPublishTo = "http:foo.com";
+$connectName = "Test Connect"; 
 $params = array(
-	'urlToPublishTo' => "http:foo.com",
-	'name' => "Test Connect");
+	'urlToPublishTo' => $urlToPublishTo,
+	'name' => $connectName);
 
 $connect = $service->connect->createConnectConfiguration(	
 		$accountId, # string	Account Id
@@ -55,10 +57,17 @@ $connect = $service->connect->createConnectConfiguration(
 		# useSoapInterface, # boolean	Set to true if the urlToPublishTo is a SOAP endpoint
 		# userIds # array list of user Id's. Required if allUsers is false
 
-echo "Create a connection: "; print_r ($connect);
-		
-$service->getConnectConfigurationByID($accountID, $connectID);
-		
+# echo "Create a connection: "; print_r ($connect);
+$connectId = $connect->connectId;
+assert ($connect->urlToPublishTo === $urlToPublishTo);
+assert ($connect->name === $connectName);
+		#		[connectId] => 123
+		#		[configurationType] => false
+		#		[urlToPublishTo] => http:foo.com
+		#		[name] => Test Connect
+
+$connect = $service->connect->getConnectConfigurationByID($accountId, $connectId);
+# echo "Connection: "; print_r ($connect);
 		
 	
 $service->updateConnectConfiguration(	
