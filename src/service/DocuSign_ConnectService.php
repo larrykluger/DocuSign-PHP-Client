@@ -106,7 +106,7 @@ class DocuSign_ConnectResource extends DocuSign_Resource {
 		# useSoapInterface, # boolean	Set to true if the urlToPublishTo is a SOAP endpoint
 		# userIds # array list of user Id's. Required if allUsers is false
 
-		$this->setURL('/accounts/' . $accountID . '/connect');
+		$this->setURL('/accounts/' . $accountId . '/connect');
 
 		$data = $params;
 		$data = $this->setBooleans($data, array(
@@ -151,7 +151,7 @@ class DocuSign_ConnectResource extends DocuSign_Resource {
 		# useSoapInterface, # boolean	Set to true if the urlToPublishTo is a SOAP endpoint
 		# userIds # array list of user Id's. Required if allUsers is false
 
-		$this->setURL('/accounts/' . $accountID . '/connect');
+		$this->setURL('/accounts/' . $accountId . '/connect');
 
 		$data = $params;
 		$data['connectId'] = $connectId;
@@ -179,7 +179,7 @@ class DocuSign_ConnectResource extends DocuSign_Resource {
 		$accountId, # string	Account Id
 		$connectId	# string	Connection Id
 		){
-		$this->setURL('/accounts/' . $accountID . '/connect/' . $connectId);
+		$this->setURL('/accounts/' . $accountId . '/connect/' . $connectId);
 		return $this->curl->makeRequest($this->url, 'DELETE', $this->client->getHeaders(), array(), null);
 	}
 }
