@@ -26,9 +26,9 @@ $accountId = $testConfig['account_id'];
 $connects = $service->connect->getConnectConfiguration($accountId);
 # echo "Connections: "; print_r ($connects);
 
-assert (is_array($connects['configurations']));
-assert (count($connects['configurations']) == $connects['totalRecords']);
-$initial_connect_records = $connects['totalRecords'];
+assert (is_array($connects->configurations));
+assert (count($connects->configurations) == $connects->totalRecords);
+$initial_connect_records = $connects->totalRecords;
 
 $params = array(
 	'urlToPublishTo' => "http:foo.com",
