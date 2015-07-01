@@ -16,22 +16,25 @@
  */
 
 require_once 'testConfig.php';
-require_once '../src/DocuSign_Client.php';
-require_once '../src/connect/DocuSign_ConnectService.php';
+require_once '../../src/DocuSign_Client.php';
+require_once '../../src/service/DocuSign_ConnectService.php';
 
-global $apiConfig;
-$client = new DocuSign_Client($apiConfig);
+$client = new DocuSign_Client($testConfig);
 $service = new DocuSign_ConnectService($client);
-$accountId = $apiConfig['account_id'];
+$accountId = $testConfig['account_id'];
 
-$connects = $service->getConnectConfiguration($accountId);
-print_r "ConnectConfig = ", $connects, "\n\n";
+$connects = $service->connect->getConnectConfiguration($accountId);
+# echo "Connections: "; print_r ($connects);
 
-$service->getConnectConfigurationByID($accountID, $connectID);
+assert (is_array($connects['configurations']));
+assert (count($connects['configurations']) == $connects['totalRecords']);
+$initial_connect_records = $connects['totalRecords'];
 
-$params = array();
+$params = array(
+	'urlToPublishTo' => "http:foo.com",
+	'name' => "Test Connect");
 
-$service->createConnectConfiguration(	
+$connect = $service->connect->createConnectConfiguration(	
 		$accountId, # string	Account Id
 		$params);
 		# params is an associative array holding the parameters. Most are optional.
@@ -52,6 +55,11 @@ $service->createConnectConfiguration(
 		# useSoapInterface, # boolean	Set to true if the urlToPublishTo is a SOAP endpoint
 		# userIds # array list of user Id's. Required if allUsers is false
 
+echo "Create a connection: "; print_r ($connect);
+		
+$service->getConnectConfigurationByID($accountID, $connectID);
+		
+		
 	
 $service->updateConnectConfiguration(	
 		$accountId, # string	Account Id

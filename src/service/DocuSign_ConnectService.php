@@ -126,7 +126,7 @@ class DocuSign_ConnectResource extends DocuSign_Resource {
 			'userIds'
 			));
 
-		return $this->curl->makeRequest($url, 'POST', $this->client->getHeaders(), array(), json_encode($data));
+		return $this->curl->makeRequest($this->url, 'POST', $this->client->getHeaders(), array(), json_encode($data));
 	}
 	
 	public function updateConnectConfiguration(	
@@ -172,7 +172,7 @@ class DocuSign_ConnectResource extends DocuSign_Resource {
 			'userIds'
 			));
 
-		return $this->curl->makeRequest($url, 'PUT', $this->client->getHeaders(), array(), json_encode($data));
+		return $this->curl->makeRequest($this->url, 'PUT', $this->client->getHeaders(), array(), json_encode($data));
 	}
 
 	public function deleteConnectConfiguration(	
@@ -180,7 +180,7 @@ class DocuSign_ConnectResource extends DocuSign_Resource {
 		$connectId	# string	Connection Id
 		){
 		$this->setURL('/accounts/' . $accountID . '/connect/' . $connectId);
-		return $this->curl->makeRequest($url, 'DELETE', $this->client->getHeaders(), array(), null);
+		return $this->curl->makeRequest($this->url, 'DELETE', $this->client->getHeaders(), array(), null);
 	}
 }
 
