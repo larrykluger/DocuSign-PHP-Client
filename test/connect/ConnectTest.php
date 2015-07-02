@@ -26,11 +26,12 @@ $accountId = $testConfig['account_id'];
 $connects = $service->connect->getConnectConfiguration($accountId);
 # echo "Connections: "; print_r ($connects);
 
-assert (is_array($connects->configurations));
-assert (count($connects->configurations) == $connects->totalRecords);
+echo '.'; assert (is_array($connects->configurations));
+echo '.'; assert (count($connects->configurations) == $connects->totalRecords);
 $initial_connect_records = $connects->totalRecords;
 
 $urlToPublishTo = "http:foo.com";
+$urlToPublishTo2 = "http:foo.com";
 $connectName = "Test Connect"; 
 $params = array(
 	'urlToPublishTo' => $urlToPublishTo,
@@ -59,45 +60,43 @@ $connect = $service->connect->createConnectConfiguration(
 
 # echo "Create a connection: "; print_r ($connect);
 $connectId = $connect->connectId;
-assert ($connect->urlToPublishTo === $urlToPublishTo);
-assert ($connect->name === $connectName);
+echo '.'; assert ($connect->urlToPublishTo === $urlToPublishTo);
+echo '.'; assert ($connect->name === $connectName);
 		#		[connectId] => 123
 		#		[configurationType] => false
 		#		[urlToPublishTo] => http:foo.com
 		#		[name] => Test Connect
 
+# check that we now have 1 more connection
+$connects = $service->connect->getConnectConfiguration($accountId);
+echo '.'; assert ($initial_connect_records === 1 + $connects->totalRecords);
+
+# get config by ID
 $connect = $service->connect->getConnectConfigurationByID($accountId, $connectId);
 # echo "Connection: "; print_r ($connect);
-assert ($connect->configurations[0]->connectId === $connectId]);
+echo '.'; assert ($connect->configurations[0]->connectId === $connectId]);
 
-	
-$service->updateConnectConfiguration(	
+$params = array(
+	'urlToPublishTo' => $urlToPublishTo2,
+	'name' => $connectName);	
+$connects = $service->connect->updateConnectConfiguration(	
 		$accountId, # string	Account Id
 		$connectId, # string	Connection Id
 		$params);
-		# params is an associative array holding the parameters. All are optional.
-		# Valid keys:
-		# urlToPublishTo, # string	Client's incoming webhook url
-		# allUsers,	# boolean	Track events initiated by all users.
-		# allowEnvelopePublish, # boolean	Enables users to publish processed events.
-		# enableLog, # boolean	Enables logging on prcoessed events. Log only maintains the last 100 events.
-		# envelopeEvents, # array list of 'Envelope' related events to track. Events: Sent, Delivered, Signed, Completed, Declined, Voided
-		# includeDocuments, # boolean	Include envelope documents
-		# includeSenderAccountasCustomField, # boolean	Include sender account as Custom Field.
-		# includeTimeZoneInformation, # boolean	Include time zone information.
-		# name, # string	name of the connection
-		# recipientEvents, # array list of 'Recipient' related events to track. Events: Sent, AutoResponsed(Delivery Failed), Delivered, Completed, Declined, AuthenticationFailure
-		# requiresAcknowledgement, # boolean	true or false
-		# signMessagewithX509Certificate,	# boolean	Signs message with an X509 certificate.
-		# soapNamespace, # string	Soap method namespace. Required if useSoapInterface is true.
-		# useSoapInterface, # boolean	Set to true if the urlToPublishTo is a SOAP endpoint
-		# userIds # array list of user Id's. Required if allUsers is false
 
+# Confirm that the config was updated.
+$connect = $service->connect->getConnectConfigurationByID($accountId, $connectId);
+echo '.'; assert ($connect->configurations[0]->urlToPublishTo === $urlToPublishTo2);
 
+# delete
 $service->deleteConnectConfiguration(	
 		$accountId, # string	Account Id
 		$connectId	# string	Connection Id
 		);
 
-echo "Done.\n";
+# check that we are now back to the starting number of configurations
+$connects = $service->connect->getConnectConfiguration($accountId);
+echo '.'; assert ($initial_connect_records === $connects->totalRecords);
+
+echo "\nDone.\n";
 		
