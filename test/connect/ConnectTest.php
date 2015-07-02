@@ -74,7 +74,7 @@ echo '.'; assert ($initial_connect_records === 1 + $connects->totalRecords);
 # get config by ID
 $connect = $service->connect->getConnectConfigurationByID($accountId, $connectId);
 # echo "Connection: "; print_r ($connect);
-echo '.'; assert ($connect->configurations[0]->connectId === $connectId]);
+echo '.'; assert ($connect->configurations[0]->connectId === $connectId);
 
 $params = array(
 	'urlToPublishTo' => $urlToPublishTo2,
