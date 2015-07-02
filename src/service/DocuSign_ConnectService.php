@@ -243,7 +243,7 @@ class DocuSign_ConnectResource extends DocuSign_Resource {
 		$connectId	# string	Connection Id
 		){
 		$this->setURL('/accounts/' . $accountId . '/connect/' . $connectId);
-		return $this->curl->makeRequest($this->url, 'DELETE', $this->client->getHeaders(), array(), null);
+		return $this->curl->makeRequest($this->url, 'DELETE', $this->client->getHeaders());
 	}
 }
 

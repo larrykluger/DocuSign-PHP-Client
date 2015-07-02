@@ -69,7 +69,7 @@ echo '.'; assert ($connect->name === $connectName);
 
 # check that we now have 1 more connection
 $connects = $service->connect->getConnectConfiguration($accountId);
-echo '.'; assert ($initial_connect_records + 1 === $connects->totalRecords);
+echo '.'; assert (($initial_connect_records + 1) === intval($connects->totalRecords));
 
 # get config by ID
 $connect = $service->connect->getConnectConfigurationByID($accountId, $connectId);
