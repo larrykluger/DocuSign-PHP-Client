@@ -80,6 +80,42 @@ class DocuSign_ConnectResource extends DocuSign_Resource {
 		return $this->curl->makeRequest($this->url, 'GET', $this->client->getHeaders(), array(), null);	
 	}
 
+	# Get connection by ID
+	#
+	# Returns same structure as getConnectionConfiguration--an array even though only one element!
+	# stdClass Object
+	#	(
+	#		[configurations] => Array
+	#			(
+	#				[0] => stdClass Object
+	#					(
+	#						[connectId] => 26858
+	#						[configurationType] => false
+	#						[urlToPublishTo] => http:foo.com
+	#						[name] => Test Connect
+	#						[allowEnvelopePublish] => false
+	#						[enableLog] => false
+	#						[includeDocuments] => false
+	#						[includeCertificateOfCompletion] => false
+	#						[requiresAcknowledgement] => false
+	#						[signMessageWithX509Certificate] => false
+	#						[useSoapInterface] => false
+	#						[includeTimeZoneInformation] => false
+	#						[includeEnvelopeVoidReason] => false
+	#						[includeSenderAccountasCustomField] => false
+	#						[envelopeEvents] =>
+	#						[recipientEvents] =>
+	#						[userIds] =>
+	#						[soapNamespace] =>
+	#						[allUsers] => false
+	#						[includeCertSoapHeader] => false
+	#						[includeDocumentFields] => false
+	#					)
+    #
+	#			)
+    #
+	#		[totalRecords] => 1
+	#	)
 	public function getConnectConfigurationByID($accountId, $connectID) {
 		$this->setURL('/accounts/' . $accountId . '/connect/' . $connectID);
 		return $this->curl->makeRequest($this->url, 'GET', $this->client->getHeaders(), array(), null);	

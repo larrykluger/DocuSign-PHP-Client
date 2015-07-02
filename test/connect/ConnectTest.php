@@ -68,7 +68,8 @@ assert ($connect->name === $connectName);
 
 $connect = $service->connect->getConnectConfigurationByID($accountId, $connectId);
 # echo "Connection: "; print_r ($connect);
-		
+assert ($connect->configurations[0]->connectId === $connectId]);
+
 	
 $service->updateConnectConfiguration(	
 		$accountId, # string	Account Id
