@@ -86,13 +86,14 @@ echo '.'; assert (($initial_connect_records + 1) === intval($connects->totalReco
 $connect = $service->connect->getConnectConfigurationByID($accountId, $connectId);
 # echo "Connection: "; print_r ($connect);
 echo '.'; assert ($connect->configurations[0]->connectId === $connectId);
-echo '.'; assert (is_array($connect->envelopeEvents));
-echo '.'; assert (is_array($connect->recipientEvents));
-echo '.'; assert (is_array($connect->userIds));
+$c = $connect->configurations[0];
+echo '.'; assert (is_array($c->envelopeEvents));
+echo '.'; assert (is_array($c->recipientEvents));
+echo '.'; assert (is_array($c->userIds));
 
-echo '.'; assert (count($connect->envelopeEvents) === 2);
-echo '.'; assert (count($connect->recipientEvents) === 2);
-echo '.'; assert (count($connect->userIds) === 0);
+echo '.'; assert (count($c->envelopeEvents) === 2);
+echo '.'; assert (count($c->recipientEvents) === 2);
+echo '.'; assert (count($c->userIds) === 0);
 
 
 $params = array(

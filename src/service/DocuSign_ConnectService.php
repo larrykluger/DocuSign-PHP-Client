@@ -209,10 +209,6 @@ class DocuSign_ConnectResource extends DocuSign_Resource {
 		$data = $this->setBooleans($data, $this->booleanElements);
 		$data = $this->setCSVs($data, $this->csvElements);
 		$result = $this->curl->makeRequest($this->url, 'POST', $this->client->getHeaders(), array(), json_encode($data));
-
-echo "createConnectConfiguration before: "; print_r ($result);
-		
-
 		$result = $this->createArrays($result, $this->csvElements);
 		return $result;
 	}
