@@ -56,7 +56,7 @@ class DocuSign_ConnectResource extends DocuSign_Resource {
 			'userIds'
 			);
 	
-	privare $booleanElements = array(
+	private $booleanElements = array(
 			'allUsers',
 			'allowEnvelopePublish', 
 			'enableLog',
