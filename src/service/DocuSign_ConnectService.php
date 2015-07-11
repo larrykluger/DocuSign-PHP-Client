@@ -109,7 +109,7 @@ class DocuSign_ConnectResource extends DocuSign_Resource {
 		$result = array();
 		$configurations = $this->curl->makeRequest($this->url, 'GET', $this->client->getHeaders(), array(), null);	
 		foreach ($configurations as $configuration) {
-			$configuration = createArrays($configuration, $this->csvElements);
+			$configuration = $this->createArrays($configuration, $this->csvElements);
 			$result[] = $configuration;
 		}
 		return $result; 
@@ -156,7 +156,7 @@ class DocuSign_ConnectResource extends DocuSign_Resource {
 		$result = array();
 		$configurations = $this->curl->makeRequest($this->url, 'GET', $this->client->getHeaders(), array(), null);	
 		foreach ($configurations as $configuration) {
-			$configuration = createArrays($configuration, $this->csvElements);
+			$configuration = $this->createArrays($configuration, $this->csvElements);
 			$result[] = $configuration;
 		}
 		return $result; 
@@ -213,7 +213,7 @@ class DocuSign_ConnectResource extends DocuSign_Resource {
 		$data = $this->setBooleans($data, $this->booleanElements);
 		$data = $this->setCSVs($data, $this->csvElements);
 		$result = $this->curl->makeRequest($this->url, 'POST', $this->client->getHeaders(), array(), json_encode($data));
-		$result = createArrays($result, $this->csvElements);
+		$result = $this->createArrays($result, $this->csvElements);
 		return $result;
 	}
 	
@@ -244,7 +244,7 @@ class DocuSign_ConnectResource extends DocuSign_Resource {
 		$data = $this->setBooleans($data, $this->booleanElements);
 		$data = $this->setCSVs($data, $this->csvElements);
 		$result = $this->curl->makeRequest($this->url, 'PUT', $this->client->getHeaders(), array(), json_encode($data));
-		$result = createArrays($result, $this->csvElements);
+		$result = $this->createArrays($result, $this->csvElements);
 		return $result;
 	}
 
