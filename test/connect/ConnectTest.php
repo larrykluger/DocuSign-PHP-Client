@@ -35,7 +35,10 @@ $urlToPublishTo2 = "http:foo.com";
 $connectName = "Test Connect"; 
 $params = array(
 	'urlToPublishTo' => $urlToPublishTo,
-	'name' => $connectName);
+	'name' => $connectName,
+	'envelopeEvents' => array('Sent', 'Delivered'),
+	'recipientEvents' => array('Delivered', 'Completed')
+	);
 
 $connect = $service->connect->createConnectConfiguration(	
 		$accountId, # string	Account Id
@@ -60,6 +63,14 @@ $connect = $service->connect->createConnectConfiguration(
 
 # echo "Create a connection: "; print_r ($connect);
 $connectId = $connect->connectId;
+echo '.'; assert (is_array($connect->envelopeEvents));
+echo '.'; assert (is_array($connect->recipientEvents));
+echo '.'; assert (is_array($connect->userIds));
+
+echo '.'; assert (count($connect->envelopeEvents) === 2);
+echo '.'; assert (count($connect->recipientEvents) === 2);
+echo '.'; assert (count($connect->userIds) === 0);
+
 echo '.'; assert ($connect->urlToPublishTo === $urlToPublishTo);
 echo '.'; assert ($connect->name === $connectName);
 		#		[connectId] => 123
@@ -75,6 +86,14 @@ echo '.'; assert (($initial_connect_records + 1) === intval($connects->totalReco
 $connect = $service->connect->getConnectConfigurationByID($accountId, $connectId);
 # echo "Connection: "; print_r ($connect);
 echo '.'; assert ($connect->configurations[0]->connectId === $connectId);
+echo '.'; assert (is_array($connect->envelopeEvents));
+echo '.'; assert (is_array($connect->recipientEvents));
+echo '.'; assert (is_array($connect->userIds));
+
+echo '.'; assert (count($connect->envelopeEvents) === 2);
+echo '.'; assert (count($connect->recipientEvents) === 2);
+echo '.'; assert (count($connect->userIds) === 0);
+
 
 $params = array(
 	'urlToPublishTo' => $urlToPublishTo2,

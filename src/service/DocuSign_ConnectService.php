@@ -15,6 +15,17 @@
  * limitations under the License.
  */
 
+ 
+ /*
+  *
+  * The connection part of the DocuSign API includes comma separated
+  * values.
+  *
+  * This library changes the comma separated value strings into arrays when 
+  * data is received and changes arrays back to strings for data being sent to
+  * DocuSign
+  */
+ 
 require_once 'DocuSign_Service.php';
 require_once 'DocuSign_Resource.php';
 
@@ -39,20 +50,26 @@ class DocuSign_ConnectResource extends DocuSign_Resource {
 		parent::__construct($service);
 	}
 	
+	private $csvElements = array(
+			'envelopeEvents',
+			'recipientEvents',
+			'userIds'
+			);
+	
+	privare $booleanElements = array(
+			'allUsers',
+			'allowEnvelopePublish', 
+			'enableLog',
+			'includeDocuments', 
+			'includeSenderAccountasCustomField', 
+			'includeTimeZoneInformation', 
+			'requiresAcknowledgement',
+			'signMessagewithX509Certificate',
+			'useSoapInterface'
+			);
+	
 	private function setURL($tail) {
 		$this->url = 'https://' . $this->client->getEnvironment() . '.docusign.net/restapi/' . $this->client->getVersion() . $tail;
-	}
-
-	private function rmNulls($data) {
-		# remove nulls and empty arrays
-		$cleaned = array();
-		foreach ($data as $key => $value) {
-			if ((!is_array($value) && $value !== null) || (is_array($value) &&  count($value) !== 0)) {
-				# It's good
-				$cleaned[$key] = $value;
-			}
-		}
-		return $cleaned;
 	}
 
 	private function setBooleans($data, $elements) {
@@ -74,10 +91,28 @@ class DocuSign_ConnectResource extends DocuSign_Resource {
 		}
 		return $data;
 	}
+	
+	private function createArrays($data, $elements) {
+		# Set specific elements to be arrays instead of comma separated text
+		foreach ($data as $key => &$value) {
+			if (in_array ($key, $elements)) {
+				# $value is currently a string
+				$value = $value === "" ? array() : explode(",", $value);
+			}
+		}
+		return $data;
+	}
 
 	public function getConnectConfiguration($accountId) {
 		$this->setURL('/accounts/' . $accountId . '/connect');
-		return $this->curl->makeRequest($this->url, 'GET', $this->client->getHeaders(), array(), null);	
+		
+		$result = array();
+		$configurations = $this->curl->makeRequest($this->url, 'GET', $this->client->getHeaders(), array(), null);	
+		foreach ($configurations as $configuration) {
+			$configuration = createArrays($configuration, $this->csvElements);
+			$result[] = $configuration;
+		}
+		return $result; 
 	}
 
 	# Get connection by ID
@@ -118,7 +153,13 @@ class DocuSign_ConnectResource extends DocuSign_Resource {
 	#	)
 	public function getConnectConfigurationByID($accountId, $connectID) {
 		$this->setURL('/accounts/' . $accountId . '/connect/' . $connectID);
-		return $this->curl->makeRequest($this->url, 'GET', $this->client->getHeaders(), array(), null);	
+		$result = array();
+		$configurations = $this->curl->makeRequest($this->url, 'GET', $this->client->getHeaders(), array(), null);	
+		foreach ($configurations as $configuration) {
+			$configuration = createArrays($configuration, $this->csvElements);
+			$result[] = $configuration;
+		}
+		return $result; 
 	}
 
 	public function createConnectConfiguration(	
@@ -167,29 +208,13 @@ class DocuSign_ConnectResource extends DocuSign_Resource {
 		#		[includeCertSoapHeader] => false
 		#		[includeDocumentFields] => false
 		#	)
-		
-
 		$this->setURL('/accounts/' . $accountId . '/connect');
-
 		$data = $params;
-		$data = $this->setBooleans($data, array(
-			'allUsers',
-			'allowEnvelopePublish', 
-			'enableLog',
-			'includeDocuments', 
-			'includeSenderAccountasCustomField', 
-			'includeTimeZoneInformation', 
-			'requiresAcknowledgement',
-			'signMessagewithX509Certificate',
-			'useSoapInterface'
-			));
-		$data = $this->setCSVs($data, array(
-			'envelopeEvents',
-			'recipientEvents',
-			'userIds'
-			));
-
-		return $this->curl->makeRequest($this->url, 'POST', $this->client->getHeaders(), array(), json_encode($data));
+		$data = $this->setBooleans($data, $this->booleanElements);
+		$data = $this->setCSVs($data, $this->csvElements);
+		$result = $this->curl->makeRequest($this->url, 'POST', $this->client->getHeaders(), array(), json_encode($data));
+		$result = createArrays($result, $this->csvElements);
+		return $result;
 	}
 	
 	public function updateConnectConfiguration(	
@@ -213,29 +238,14 @@ class DocuSign_ConnectResource extends DocuSign_Resource {
 		# soapNamespace, # string	Soap method namespace. Required if useSoapInterface is true.
 		# useSoapInterface, # boolean	Set to true if the urlToPublishTo is a SOAP endpoint
 		# userIds # array list of user Id's. Required if allUsers is false
-
 		$this->setURL('/accounts/' . $accountId . '/connect');
-
 		$data = $params;
 		$data['connectId'] = $connectId;
-		$data = $this->setBooleans($data, array(
-			'allUsers',
-			'allowEnvelopePublish', 
-			'enableLog',
-			'includeDocuments', 
-			'includeSenderAccountasCustomField', 
-			'includeTimeZoneInformation', 
-			'requiresAcknowledgement',
-			'signMessagewithX509Certificate',
-			'useSoapInterface'
-			));
-		$data = $this->setCSVs($data, array(
-			'envelopeEvents',
-			'recipientEvents',
-			'userIds'
-			));
-
-		return $this->curl->makeRequest($this->url, 'PUT', $this->client->getHeaders(), array(), json_encode($data));
+		$data = $this->setBooleans($data, $this->booleanElements);
+		$data = $this->setCSVs($data, $this->csvElements);
+		$result = $this->curl->makeRequest($this->url, 'PUT', $this->client->getHeaders(), array(), json_encode($data));
+		$result = createArrays($result, $this->csvElements);
+		return $result;
 	}
 
 	public function deleteConnectConfiguration(	
@@ -246,5 +256,3 @@ class DocuSign_ConnectResource extends DocuSign_Resource {
 		return $this->curl->makeRequest($this->url, 'DELETE', $this->client->getHeaders());
 	}
 }
-
-?>
