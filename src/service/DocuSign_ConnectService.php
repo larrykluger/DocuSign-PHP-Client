@@ -105,14 +105,13 @@ class DocuSign_ConnectResource extends DocuSign_Resource {
 
 	public function getConnectConfiguration($accountId) {
 		$this->setURL('/accounts/' . $accountId . '/connect');
-		
-		$result = array();
-		$configurations = $this->curl->makeRequest($this->url, 'GET', $this->client->getHeaders(), array(), null);	
-		foreach ($configurations as $configuration) {
+		$data = $this->curl->makeRequest($this->url, 'GET', $this->client->getHeaders(), array(), null);	
+echo "before: "; print_r ($data);
+		foreach ($data->configurations as &$configuration) {
 			$configuration = $this->createArrays($configuration, $this->csvElements);
-			$result[] = $configuration;
 		}
-		return $result; 
+echo "after: "; print_r ($data);
+		return $data; 
 	}
 
 	# Get connection by ID
@@ -155,6 +154,7 @@ class DocuSign_ConnectResource extends DocuSign_Resource {
 		$this->setURL('/accounts/' . $accountId . '/connect/' . $connectID);
 		$result = array();
 		$configurations = $this->curl->makeRequest($this->url, 'GET', $this->client->getHeaders(), array(), null);	
+echo "getConnectConfigurationByID before: "; print_r ($configurations);
 		foreach ($configurations as $configuration) {
 			$configuration = $this->createArrays($configuration, $this->csvElements);
 			$result[] = $configuration;
