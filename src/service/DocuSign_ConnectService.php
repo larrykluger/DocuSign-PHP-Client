@@ -106,11 +106,9 @@ class DocuSign_ConnectResource extends DocuSign_Resource {
 	public function getConnectConfiguration($accountId) {
 		$this->setURL('/accounts/' . $accountId . '/connect');
 		$data = $this->curl->makeRequest($this->url, 'GET', $this->client->getHeaders(), array(), null);	
-echo "before: "; print_r ($data);
 		foreach ($data->configurations as &$configuration) {
 			$configuration = $this->createArrays($configuration, $this->csvElements);
 		}
-echo "after: "; print_r ($data);
 		return $data; 
 	}
 
@@ -153,13 +151,11 @@ echo "after: "; print_r ($data);
 	public function getConnectConfigurationByID($accountId, $connectID) {
 		$this->setURL('/accounts/' . $accountId . '/connect/' . $connectID);
 		$result = array();
-		$configurations = $this->curl->makeRequest($this->url, 'GET', $this->client->getHeaders(), array(), null);	
-echo "getConnectConfigurationByID before: "; print_r ($configurations);
-		foreach ($configurations as $configuration) {
+		$data = $this->curl->makeRequest($this->url, 'GET', $this->client->getHeaders(), array(), null);	
+		foreach ($data->configurations as &$configuration) {
 			$configuration = $this->createArrays($configuration, $this->csvElements);
-			$result[] = $configuration;
 		}
-		return $result; 
+		return $data; 
 	}
 
 	public function createConnectConfiguration(	
@@ -213,6 +209,10 @@ echo "getConnectConfigurationByID before: "; print_r ($configurations);
 		$data = $this->setBooleans($data, $this->booleanElements);
 		$data = $this->setCSVs($data, $this->csvElements);
 		$result = $this->curl->makeRequest($this->url, 'POST', $this->client->getHeaders(), array(), json_encode($data));
+
+echo "createConnectConfiguration before: "; print_r ($result);
+		
+
 		$result = $this->createArrays($result, $this->csvElements);
 		return $result;
 	}
